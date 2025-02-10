@@ -1,24 +1,45 @@
 package com.example.zsl_osoby;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
+
+        EditText inputLiczbaOsob = findViewById(R.id.inputLiczbaOsob);
+        Button buttonGeneruj = findViewById(R.id.buttonGeneruj);
+
+        buttonGeneruj.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String liczbaOsobStr = inputLiczbaOsob.getText().toString();
+
+                if (!liczbaOsobStr.isEmpty()) {
+                    try {
+                        int liczbaOsob = Integer.parseInt(liczbaOsobStr);
+                        if (liczbaOsob > 0) {
+                            Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+                            intent.putExtra("LICZBA_OSOB", liczbaOsob);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(MainActivity.this, "Wpisz liczbę większą od 0", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(MainActivity.this, "Wprowadź prawidłową liczbę", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, "Wpisz liczbę osób", Toast.LENGTH_SHORT).show();
+                }
+            }
         });
     }
 }

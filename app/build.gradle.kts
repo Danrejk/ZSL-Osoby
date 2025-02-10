@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace = "com.example.zsl_osoby"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.zsl_osoby"

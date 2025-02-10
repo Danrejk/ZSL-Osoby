@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class SecondActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lista);
+        setContentView(R.layout.activity_second);
 
         ListView listViewOsoby = findViewById(R.id.listViewOsoby);
         Intent intent = getIntent();
@@ -42,19 +43,25 @@ public class SecondActivity extends AppCompatActivity {
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_2, android.R.id.text1, osoby) {
+            @NonNull
             @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
+            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+                View view = convertView;
+                if (view == null) {
+                    view = getLayoutInflater().inflate(android.R.layout.simple_list_item_2, parent, false);
+                }
 
                 TextView text1 = view.findViewById(android.R.id.text1);
                 TextView text2 = view.findViewById(android.R.id.text2);
 
-                text1.setText(osoby.get(position));
-                text1.setTextSize(18);
-                text1.setTypeface(null, android.graphics.Typeface.BOLD);
+                if (text1 != null && text2 != null) {
+                    text1.setText(osoby.get(position));
+                    text1.setTextSize(18);
+                    text1.setTypeface(null, android.graphics.Typeface.BOLD);
 
-                text2.setText(losoweLiczby.get(position));
-                text2.setTextSize(16);
+                    text2.setText(String.valueOf(losoweLiczby.get(position)));
+                    text2.setTextSize(16);
+                }
 
                 return view;
             }
@@ -65,9 +72,12 @@ public class SecondActivity extends AppCompatActivity {
         listViewOsoby.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String fullName = osoby.get(position);
+                int randomNumber = losoweLiczby.get(position);
+
                 new AlertDialog.Builder(SecondActivity.this)
-                        .setTitle("Losowa liczba")
-                        .setMessage(losoweLiczby.get(position))
+                        .setTitle("Dane osobowe")
+                        .setMessage("Imię i nazwisko: " + fullName + "\nLosowa liczba: " + randomNumber)
                         .setPositiveButton("OK", null)
                         .show();
             }
